@@ -45,6 +45,22 @@ PREDEFINED_COMPUTER_USE_FUNCTIONS = [
     "navigate",
     "key_combination",
     "drag_and_drop",
+    "click",
+    "double_click",
+    "triple_click",
+    "middle_click",
+    "right_click",
+    "mouse_down",
+    "mouse_up",
+    "move",
+    "type",
+    "wait",
+    "press_key",
+    "key_down",
+    "key_up",
+    "hotkey",
+    "take_screenshot",
+    "scroll"    
 ]
 
 
@@ -122,14 +138,56 @@ class BrowserAgent:
         """Handles the action and returns the environment state."""
         if action.name == "open_web_browser":
             return self._browser_computer.open_web_browser()
-        elif action.name == "click_at":
+        elif action.name == "click_at" or action.name == "click":
             x = self.denormalize_x(action.args["x"])
             y = self.denormalize_y(action.args["y"])
             return self._browser_computer.click_at(
                 x=x,
                 y=y,
             )
-        elif action.name == "hover_at":
+        elif action.name == "double_click":
+            x = self.denormalize_x(action.args["x"])
+            y = self.denormalize_y(action.args["y"])
+            return self._browser_computer.double_click_at(
+                x=x,
+                y=y,
+            )
+        elif action.name == "triple_click":
+            x = self.denormalize_x(action.args["x"])
+            y = self.denormalize_y(action.args["y"])
+            return self._browser_computer.triple_click_at(
+                x=x,
+                y=y,
+            )
+        elif action.name == "middle_click":
+            x = self.denormalize_x(action.args["x"])
+            y = self.denormalize_y(action.args["y"])
+            return self._browser_computer.middle_click_at(
+                x=x,
+                y=y,
+            )
+        elif action.name == "right_click":
+            x = self.denormalize_x(action.args["x"])
+            y = self.denormalize_y(action.args["y"])
+            return self._browser_computer.right_click_at(
+                x=x,
+                y=y,
+            )
+        elif action.name == "mouse_down":
+            x = self.denormalize_x(action.args["x"])
+            y = self.denormalize_y(action.args["y"])
+            return self._browser_computer.mouse_down(
+                x=x,
+                y=y,
+            )
+        elif action.name == "mouse_up":
+            x = self.denormalize_x(action.args["x"])
+            y = self.denormalize_y(action.args["y"])
+            return self._browser_computer.mouse_up(
+                x=x,
+                y=y,
+            )
+        elif action.name == "hover_at" or action.name == "move":
             x = self.denormalize_x(action.args["x"])
             y = self.denormalize_y(action.args["y"])
             return self._browser_computer.hover_at(
@@ -148,9 +206,15 @@ class BrowserAgent:
                 press_enter=press_enter,
                 clear_before_typing=clear_before_typing,
             )
+        elif action.name == "type":
+            press_enter = action.args.get("press_enter", False)
+            return self._browser_computer.type_text(
+                text=action.args["text"],
+                press_enter=press_enter,
+            )
         elif action.name == "scroll_document":
             return self._browser_computer.scroll_document(action.args["direction"])
-        elif action.name == "scroll_at":
+        elif action.name == "scroll_at" or action.name == "scroll":
             x = self.denormalize_x(action.args["x"])
             y = self.denormalize_y(action.args["y"])
             magnitude = action.args.get("magnitude", 800)
@@ -167,6 +231,9 @@ class BrowserAgent:
             )
         elif action.name == "wait_5_seconds":
             return self._browser_computer.wait_5_seconds()
+        elif action.name == "wait":
+            wait_seconds = int(action.args.get("seconds", 1))
+            return self._browser_computer.wait(wait_seconds)
         elif action.name == "go_back":
             return self._browser_computer.go_back()
         elif action.name == "go_forward":
@@ -175,10 +242,24 @@ class BrowserAgent:
             return self._browser_computer.search()
         elif action.name == "navigate":
             return self._browser_computer.navigate(action.args["url"])
-        elif action.name == "key_combination":
+        elif action.name == "key_combination" or action.name == "hotkey":
             return self._browser_computer.key_combination(
                 action.args["keys"].split("+")
             )
+        elif action.name == "press_key":
+            return self._browser_computer.press_key(
+                action.args["key"]
+            )
+        elif action.name == "key_down":
+            return self._browser_computer.key_down(
+                action.args["key"]
+            )
+        elif action.name == "key_up":
+            return self._browser_computer.key_up(
+                action.args["key"]
+            )
+        elif action.name == "take_screenshot":
+            return self._browser_computer.take_screenshot()
         elif action.name == "drag_and_drop":
             x = self.denormalize_x(action.args["x"])
             y = self.denormalize_y(action.args["y"])
